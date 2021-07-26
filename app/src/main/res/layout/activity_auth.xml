@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AuthActivity">
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.084"
+        app:srcCompat="@drawable/ic_auth_logo" />
+
+    <in.aabhasjindal.otptextview.OtpTextView
+        android:id="@+id/inputCredential"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:bar_active_color="@color/primary_color"
+        app:bar_enabled="true"
+        app:bar_height="2dp"
+        app:bar_inactive_color="@color/credential_bar_active"
+        app:bar_success_color="@color/green"
+        app:height="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:length="4"
+        app:otp_box_background="@color/credential_background"
+        app:otp_text_size="24dp"
+        app:width="40dp">
+
+        <requestFocus />
+    </in.aabhasjindal.otptextview.OtpTextView>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.ThreeBounce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:SpinKit_Color="@color/primary_color"
+        app:layout_constraintEnd_toEndOf="@+id/inputCredential"
+        app:layout_constraintStart_toStartOf="@+id/inputCredential"
+        app:layout_constraintTop_toBottomOf="@+id/inputCredential" />
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="This is error text!"
+        android:visibility="gone"
+
+        android:textColor="@color/red"
+        app:layout_constraintEnd_toEndOf="@+id/inputCredential"
+        app:layout_constraintStart_toStartOf="@+id/inputCredential"
+        app:layout_constraintTop_toBottomOf="@+id/inputCredential" />
+
+        <TextView
+        android:id="@+id/successText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Login Successfully!"
+        android:textColor="@color/green"
+            android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/inputCredential"
+        app:layout_constraintStart_toStartOf="@+id/inputCredential"
+        app:layout_constraintTop_toBottomOf="@+id/inputCredential" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:text="Enter Your Credential"
+
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

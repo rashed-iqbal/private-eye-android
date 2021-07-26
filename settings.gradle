@@ -1,0 +1,2 @@
+rootProject.name = "Private Eye Lite"
+include ':app'
