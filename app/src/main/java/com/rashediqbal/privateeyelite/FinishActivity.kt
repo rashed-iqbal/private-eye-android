@@ -13,7 +13,7 @@ class FinishActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.finishBtn).setOnClickListener {
             startActivity(Intent(this@FinishActivity,MainActivity::class.java))
-            finishAffinity()
+            finish()
         }
 
     }

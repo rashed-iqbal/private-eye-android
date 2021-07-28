@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
@@ -23,19 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         when {
             session.checkLogin() -> {
-                val i = Intent(this,BackgroundReceiver::class.java)
-                i.action = "BACKGROUND_PROCESS"
-
-                val pIntent = PendingIntent.getBroadcast(this,0,i, 0)
-                val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,5000,AlarmManager.INTERVAL_FIFTEEN_MINUTES,pIntent)
-
-                val p = packageManager
-                p.setComponentEnabledSetting(
-                    componentName,
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP
-                )
+                TODO("Handle if user logged in")
             }
 
             session.checkCredential() -> {

@@ -3,7 +3,7 @@ package com.rashediqbal.privateeyelite
 import android.content.Context
 import android.content.SharedPreferences
 
-class SessionManager(private val context:Context) {
+class SessionManager(context:Context) {
 
     private val keyCredential = "credential"
     private val keyTarget = "target"
