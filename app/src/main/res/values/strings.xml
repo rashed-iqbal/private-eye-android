@@ -3,4 +3,5 @@
     <string name="invalid_credential">Invalid Credential</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_desc">In Android Q or above, you must Allow ignore battery optimization for this app so that you can use this app features.</string>
 </resources>

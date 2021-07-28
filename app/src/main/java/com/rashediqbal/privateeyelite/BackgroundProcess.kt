@@ -8,6 +8,6 @@ class BackgroundProcess(context: Context, workerParams: WorkerParameters) :Worke
     workerParams
 ) {
     override fun doWork(): Result {
-        TODO("Not yet implemented")
+        return Result.success()
     }
 }
