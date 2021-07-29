@@ -10,8 +10,15 @@ class FinishActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_finish)
 
+        val sessionManager = SessionManager(this)
+        val isLogin = sessionManager.checkLogin()
+
 
         findViewById<TextView>(R.id.finishBtn).setOnClickListener {
+            if (isLogin){
+                val processUtils = ProcessUtils(this)
+                processUtils.backgroundProcess()
+            }
             startActivity(Intent(this@FinishActivity,MainActivity::class.java))
             finish()
         }

@@ -38,7 +38,6 @@ class PermissionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_permission)
 
-        sessionManager = SessionManager(this)
         initView()
         verifyActivityResult()
         verifyPermissions()
@@ -58,6 +57,7 @@ class PermissionActivity : AppCompatActivity() {
 
     // Go To Finish Activity
     private fun goToFinishActivity(){
+        sessionManager.setGranted(true)
         val intent = Intent(this,FinishActivity::class.java)
         startActivity(intent)
         finish()
@@ -142,6 +142,7 @@ class PermissionActivity : AppCompatActivity() {
         }
 
         if (checkAllPermission()){
+
             goToFinishActivity()
         }
 
@@ -230,6 +231,8 @@ class PermissionActivity : AppCompatActivity() {
         dot4 = findViewById(R.id.dot4)
         dot5 = findViewById(R.id.dot5)
         lineLine = findViewById(R.id.lineLine)
+
+        sessionManager = SessionManager(this)
 
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
