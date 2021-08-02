@@ -23,13 +23,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PrivateEyeLite">
+
         <activity android:name=".FinishActivity" />
         <activity android:name=".PermissionActivity" />
         <activity
             android:name=".AuthActivity"
             android:windowSoftInputMode="stateVisible" />
         <activity android:name=".WelcomeActivity" />
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,7 +52,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
 
 
     </application>

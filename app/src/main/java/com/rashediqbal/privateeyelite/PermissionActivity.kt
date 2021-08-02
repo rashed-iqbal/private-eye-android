@@ -1,7 +1,6 @@
 package com.rashediqbal.privateeyelite
 
 import android.Manifest.permission.*
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent

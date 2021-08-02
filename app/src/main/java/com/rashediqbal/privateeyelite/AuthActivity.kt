@@ -1,10 +1,9 @@
 package com.rashediqbal.privateeyelite
 
-import `in`.aabhasjindal.otptextview.OTPListener
-import `in`.aabhasjindal.otptextview.OtpTextView
+import com.rashediqbal.privateeyelite.dependencies.OTPListener
+import com.rashediqbal.privateeyelite.dependencies.OtpTextView
 import android.accounts.AccountManager
 import android.content.Intent
-import android.net.wifi.hotspot2.pps.Credential
 import android.os.Build
 import android.os.Bundle
 import android.util.Log

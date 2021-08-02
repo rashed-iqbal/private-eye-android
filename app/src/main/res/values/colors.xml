@@ -20,4 +20,10 @@
     <color name="logo_color">#007ee5</color>
 
     <color name="dot_line">#7C939090</color>
+
+
+    <color name="red">#d32f2f</color>
+    <color name="grey">#a9a9a9</color>
+
+    <color name="transparent">#00000000</color>
 </resources>

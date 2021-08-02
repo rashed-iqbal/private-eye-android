@@ -1,22 +1,14 @@
 package com.rashediqbal.privateeyelite
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.rashediqbal.webtoapk.WebToApk
+import com.rashediqbal.privateeyelite.dependencies.WebToApk
 
 
 class MainActivity : AppCompatActivity() {

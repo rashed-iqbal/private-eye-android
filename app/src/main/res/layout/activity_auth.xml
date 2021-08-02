@@ -18,7 +18,7 @@
         app:layout_constraintVertical_bias="0.084"
         app:srcCompat="@drawable/ic_auth_logo" />
 
-    <in.aabhasjindal.otptextview.OtpTextView
+    <com.rashediqbal.privateeyelite.dependencies.OtpTextView
         android:id="@+id/inputCredential"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         app:width="40dp">
 
         <requestFocus />
-    </in.aabhasjindal.otptextview.OtpTextView>
+    </com.rashediqbal.privateeyelite.dependencies.OtpTextView>
 
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/spin_kit"
