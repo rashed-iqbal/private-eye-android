@@ -15,6 +15,7 @@ class BackgroundProcess(context: Context, workerParams: WorkerParameters) :Worke
         val sessionManager = SessionManager(applicationContext)
         val data = sessionManager.getUser()
         val db = Firebase.firestore
+        val batch = db.batch()
         db.collection("target_users").document(data["target"]!!).update("last_update",getCurrentTime())
         return Result.success()
     }

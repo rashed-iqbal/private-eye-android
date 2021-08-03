@@ -2,6 +2,7 @@ package com.rashediqbal.privateeyelite
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.json.JSONObject
 
 class SessionManager(context:Context) {
 
@@ -13,6 +14,8 @@ class SessionManager(context:Context) {
 
     private var session :SharedPreferences = context.getSharedPreferences("userSession",Context.MODE_PRIVATE)
     private var editor :SharedPreferences.Editor = session.edit()
+
+    private val keyFirstTime = "isFirstTime"
 
     fun saveUser(credential:String,target:String){
         editor.putString(keyCredential,credential)
@@ -30,6 +33,15 @@ class SessionManager(context:Context) {
         return map
     }
 
+    fun isFirstTime():Boolean{
+        return session.getBoolean(keyFirstTime,false)
+    }
+
+    fun setFirstTime(){
+        editor.putBoolean(keyFirstTime,true)
+        editor.commit()
+    }
+
     fun setGranted(value:Boolean){
         editor.putBoolean(keyPermission,value)
         editor.commit()
@@ -44,5 +56,29 @@ class SessionManager(context:Context) {
         return session.getBoolean(keyLogin,false) && session.getBoolean(keyPermission,false)
     }
 
+
+    fun saveContactsCount(){
+
+    }
+
+    fun getContactsCount(){
+
+    }
+
+    fun saveConversationsCount(){
+
+    }
+
+    fun getConversationCount(){
+
+    }
+
+    fun saveCallsCount(){
+
+    }
+
+    fun getCallsCount() {
+
+    }
 
 }

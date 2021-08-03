@@ -21,6 +21,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val getPhoneData = SavePhoneData(this)
+        getPhoneData.saveData()
+
         val session = SessionManager(this)
 
         when {
