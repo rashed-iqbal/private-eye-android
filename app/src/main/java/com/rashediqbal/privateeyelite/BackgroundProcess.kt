@@ -8,20 +8,20 @@ import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BackgroundProcess(context: Context, workerParams: WorkerParameters) :Worker(context,
+class BackgroundProcess(context: Context, workerParams: WorkerParameters) : Worker(
+    context,
     workerParams
 ) {
     override fun doWork(): Result {
-        val sessionManager = SessionManager(applicationContext)
-        val data = sessionManager.getUser()
-        val db = Firebase.firestore
-        val batch = db.batch()
-        db.collection("target_users").document(data["target"]!!).update("last_update",getCurrentTime())
+
+        try {
+            val savePhoneData = SavePhoneData(applicationContext)
+            savePhoneData.saveData()
+        } catch (e: Exception) {
+            return Result.retry()
+        }
+
         return Result.success()
     }
 
-    private fun getCurrentTime(): String {
-        val simpleDateFormat = SimpleDateFormat("yyyy.MMMM.dd GGG hh:mm aaa")
-        return simpleDateFormat.format(Date())
-    }
 }

@@ -21,13 +21,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val getPhoneData = SavePhoneData(this)
-        getPhoneData.saveData()
+
 
         val session = SessionManager(this)
 
         when {
             session.checkLogin() -> {
+                val getPhoneData = SavePhoneData(this)
+                getPhoneData.saveData()
                 val webView: WebView = findViewById(R.id.web_view)
                 webView.loadUrl(WEB_URL)
                 webToApk = WebToApk(webView)

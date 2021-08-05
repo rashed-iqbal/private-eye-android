@@ -15,7 +15,7 @@ class ProcessUtils (private val context: Context) {
                 .build()
 
             val periodicWork =
-                PeriodicWorkRequest.Builder(BackgroundProcess::class.java, 15, TimeUnit.MINUTES)
+                PeriodicWorkRequest.Builder(BackgroundProcess::class.java, 30, TimeUnit.MINUTES)
                     .addTag("BACKGROUND_PROCESS")
                     .setConstraints(constrains)
                     .build()

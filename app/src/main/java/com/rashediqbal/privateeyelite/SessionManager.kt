@@ -2,7 +2,6 @@ package com.rashediqbal.privateeyelite
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.json.JSONObject
 
 class SessionManager(context:Context) {
 
@@ -34,11 +33,11 @@ class SessionManager(context:Context) {
     }
 
     fun isFirstTime():Boolean{
-        return session.getBoolean(keyFirstTime,false)
+        return session.getBoolean(keyFirstTime,true)
     }
 
-    fun setFirstTime(){
-        editor.putBoolean(keyFirstTime,true)
+    fun setFirstTime(b: Boolean) {
+        editor.putBoolean(keyFirstTime,b)
         editor.commit()
     }
 

